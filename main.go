@@ -2,28 +2,31 @@ package main
 
 import (
 	"fmt"
-	"html/template"
+	_"html/template"
 	"net/http"
-
+    "Gallery-sharing/views"
 	"github.com/gorilla/mux"
 )
 
-var homeTemplate *template.Template
-var contactTemplate *template.Template
-
+var homeView *views.View
+var contactView *views.View
 
 func home(w http.ResponseWriter, r *http.Request) {
 	// it is not obsvious that wwe are working always withh html
 	// so we set the content header
 	w.Header().Set("Content-Type", "text/html")
-	if err := homeTemplate.Execute(w, nil); err != nil {
+	homeTemplate := homeView.Template
+	err := homeTemplate.Execute(w, nil)
+	if err != nil {
 		panic(err)
 	}
 }
 
 func contact(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
-    if err := contactTemplate.Execute(w, nil); err!= nil {
+    contactTemplate := contactView.Template
+    err := contactTemplate.Execute(w, nil)
+	if err!= nil {
 		panic(err)
 	}
 }
@@ -35,15 +38,10 @@ func NotFound(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	// keep track of the template being parsed
-	var err error
-	homeTemplate, err = template.ParseFiles("views/home.gohtml", "views/layouts/footer.gohtml")
-	if err != nil {
-		panic(err)
-	}
-	contactTemplate, err = template.ParseFiles("views/contact.gohtml", "views/layouts/footer.gohtml")
-	if err != nil {
-		panic(err)
-	}
+	//var err error
+	homeView = views.NewView("views/home.gohtml")
+	contactView = views.NewView("views/contact.gohtml")
+    
 	r := mux.NewRouter()
 	r.NotFoundHandler = http.HandlerFunc(NotFound)
 	r.HandleFunc("/", home)
