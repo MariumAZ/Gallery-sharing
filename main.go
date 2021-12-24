@@ -1,10 +1,11 @@
 package main
 
 import (
+	"Gallery-sharing/views"
 	"fmt"
-	_"html/template"
+	_ "html/template"
 	"net/http"
-    "Gallery-sharing/views"
+
 	"github.com/gorilla/mux"
 )
 
@@ -24,9 +25,9 @@ func home(w http.ResponseWriter, r *http.Request) {
 
 func contact(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
-    contactTemplate := contactView.Template
-    err := contactTemplate.Execute(w, nil)
-	if err!= nil {
+	contactTemplate := contactView.Template
+	err := contactTemplate.Execute(w, nil)
+	if err != nil {
 		panic(err)
 	}
 }
@@ -39,9 +40,9 @@ func NotFound(w http.ResponseWriter, r *http.Request) {
 func main() {
 	// keep track of the template being parsed
 	//var err error
-	homeView = views.NewView("views/home.gohtml")
-	contactView = views.NewView("views/contact.gohtml")
-    
+	homeView = views.NewView("bootstrap", "views/home.gohtml")
+	contactView = views.NewView("bootstrap", "views/contact.gohtml")
+
 	r := mux.NewRouter()
 	r.NotFoundHandler = http.HandlerFunc(NotFound)
 	r.HandleFunc("/", home)
