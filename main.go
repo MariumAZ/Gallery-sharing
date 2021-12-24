@@ -17,6 +17,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 	// so we set the content header
 	w.Header().Set("Content-Type", "text/html")
 	homeTemplate := homeView.Template
+	// err := homeTemplate.ExecuteTemplate(w, homeView.Layout, nil)
 	err := homeTemplate.Execute(w, nil)
 	if err != nil {
 		panic(err)
@@ -40,7 +41,7 @@ func NotFound(w http.ResponseWriter, r *http.Request) {
 func main() {
 	// keep track of the template being parsed
 	//var err error
-	homeView = views.NewView("bootstrap", "views/home.gohtml")
+	homeView    = views.NewView("bootstrap", "views/home.gohtml")
 	contactView = views.NewView("bootstrap", "views/contact.gohtml")
 
 	r := mux.NewRouter()
