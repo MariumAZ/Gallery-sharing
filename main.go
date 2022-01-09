@@ -5,7 +5,6 @@ import (
 	"fmt"
 	_ "html/template"
 	"net/http"
-
 	"github.com/gorilla/mux"
 )
 
@@ -23,6 +22,11 @@ func contact(w http.ResponseWriter, r *http.Request) {
 	must(contactView.Render(w, nil))
 }
 
+func signup(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html")
+	must(signView.Render(w, nil))
+}
+
 func NotFound(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 	fmt.Fprint(w, "Sorry Page Requested Not Found")
@@ -32,11 +36,13 @@ func main() {
 
 	homeView    = views.NewView("bootstrap", "views/home.gohtml")
 	contactView = views.NewView("bootstrap", "views/contact.gohtml")
+	signView    = views.NewView("bootstrap", "views/signup.gohtml")
 
 	r := mux.NewRouter()
 	r.NotFoundHandler = http.HandlerFunc(NotFound)
 	r.HandleFunc("/", home)
 	r.HandleFunc("/contact", contact)
+	r.HandleFunc("/signup", signup)
 	http.ListenAndServe(":3000", r)
 }
 
