@@ -1,9 +1,10 @@
-package views 
+package views
 
 import (
-	"html/template"
-	"path/filepath"
 	"fmt"
+	"html/template"
+	"net/http"
+	"path/filepath"
 )
 
 var (
@@ -21,11 +22,13 @@ func layoutFiles() []string {
 }
 
 
+
 func NewView(layout string, files ...string) *View {
 	//fmt.Println("layoutfiles", layoutFiles())
 	files = append(files, layoutFiles()...)
 	//fmt.Println(files)
 	t, err := template.ParseFiles(files...)
+	fmt.Println("t: ", t)
 	if err != nil {
 		panic(err)
 	}
@@ -38,4 +41,9 @@ func NewView(layout string, files ...string) *View {
 type View struct {
 	Template *template.Template
 	Layout string
+}
+
+func (v *View) Render(w http.ResponseWriter, data interface{}) error {
+	fmt.Println("layout", v.Layout)
+	return v.Template.ExecuteTemplate(w, v.Layout, data)
 }
